@@ -1,0 +1,98 @@
+body {
+	background: linear-gradient(to right, #1d2671, #c33764);
+	font-family: "Segoe UI", sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+	color: white;
+}
+
+.container {
+	text-align: center;
+	background: rgba(255, 255, 255, 0.1);
+	padding: 30px;
+	border-radius: 20px;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+	width: 90%;
+	max-width: 600px;
+}
+
+#imageBox {
+	width: 160px;
+	height: 160px;
+	margin: 0 auto 20px;
+	background: linear-gradient(135deg, rgba(60, 60, 80, 0.9), rgba(30, 30, 50, 0.9));
+	border-radius: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow:
+		0 4px 6px rgba(0, 0, 0, 0.3),
+		0 1px 2px rgba(255, 255, 255, 0.1) inset;
+	backdrop-filter: blur(6px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	color: white;
+	transition: all 0.3s ease;
+}
+
+#imageBox.hidden {
+	display: none;
+}
+
+#sequenceDisplay img {
+	width: 130px;
+	height: 130px;
+	border-radius: 10px;
+	transition: opacity 0.5s ease;
+}
+
+#buttonPanel {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+button.image-button {
+	width: 80px;
+	height: 80px;
+	border: 3px solid white;
+	border-radius: 10px;
+	background-size: cover;
+	background-position: center;
+	cursor: pointer;
+	transition: transform 0.2s, border-color 0.3s;
+}
+
+button.image-button.selected {
+	border: 3px solid #4CAF50;
+	box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+button.image-button:hover {
+	transform: scale(1.1);
+}
+
+#startButton {
+	margin-top: 20px;
+	padding: 10px 20px;
+	font-size: 18px;
+	background-color: #ffffff;
+	color: #1d2671;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: background 0.3s;
+}
+
+#startButton:hover {
+	background-color: #ddd;
+}
+
+#resultDisplay {
+	font-size: 20px;
+	margin-top: 15px;
+}
