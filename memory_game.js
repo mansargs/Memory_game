@@ -1,10 +1,14 @@
-let isGameActive = true;
-let isSequenceActive = false;
+// Խաղի վիճակները պահող փոփոխականներ
+
+let isGameActive = true;         // Հուշում է՝ խաղը ակտիվ  է թե ոչ
+let isSequenceActive = false;    // Հուշում է՝ հերթականությունը ցուցադրվում է, թե ոչ
 let level = 1;
 const maxLevel = 4;
-let sequence = [];
-let userInput = [];
+let sequence = [];               // Խաղի ընթացքում ցուցադրվող նկարների հաջորդականությունը
+let userInput = [];              // Օգտագործողի մուտքագրած հերթականությունը
 
+
+// Նկարների ցուցակ՝ URL-ներով, որոնք օգտագործվում են խաղում
 const images = [
 	"https://i.pinimg.com/736x/44/d1/c6/44d1c6a9fd049729a4892a3f64de5efc.jpg",
 	"https://i.pinimg.com/736x/ba/07/01/ba0701b2cf97c112b52ca74a4659321e.jpg",
@@ -16,6 +20,7 @@ const images = [
 	"https://i.pinimg.com/736x/31/6d/a9/316da90c00367290ff663a70f15bd55e.jpg"
 ];
 
+// Ստանում ենք HTML էլեմենտները՝ ID-ներով
 const startButton = document.getElementById("startButton");
 const imageBox = document.getElementById("imageBox");
 const resultDisplay = document.getElementById("resultDisplay");
@@ -23,137 +28,151 @@ const buttonPanel = document.getElementById("buttonPanel");
 const sequenceDisplay = document.getElementById("sequenceDisplay");
 const levelDisplay = document.getElementById("levelDisplay");
 
-startButton.onclick = startLevel;
+// Սեղմելով "Սկսել խաղը" կոճակը՝ սկսում ենք խաղը
+startButton.onclick = startGame;
 
-function startLevel() {
-    if (!isGameActive) return;
+// Հիմնական ֆունկցիան՝ խաղի սկսման համար և փուլերի համար
+function startGame() {
+	if (!isGameActive) return;
 
-    isSequenceActive = true;
+	isSequenceActive = true;  // Խաղի հաջորդականությունը սկսվում է
+	startButton.style.display = "none";  // Սկսելու կոճակը թաքցվում է
+	imageBox.classList.remove("hidden");
+	resultDisplay.textContent = "";  // Մաքրում ենք արդյունքների ցուցադրումը
+	buttonPanel.innerHTML = "";  // Մաքրում ենք կոճակների շարքը
+	sequenceDisplay.innerHTML = "";
+	levelDisplay.textContent = level;
+	userInput = [];
 
-    startButton.style.display = "none";
-    imageBox.classList.remove("hidden");
-    resultDisplay.textContent = "";
-    buttonPanel.innerHTML = "";
-    sequenceDisplay.innerHTML = "";
-    levelDisplay.textContent = level;
-    userInput = [];
+	// Խառնում ենք նկարները և վերցնում ենք այնքան, որքան տվյալ մակարդակում պետք է
+	const shuffledImages = images.sort(() => 0.5 - Math.random());
+	sequence = shuffledImages.slice(0, level);
 
-    const shuffledImages = images.sort(() => 0.5 - Math.random());
-    sequence = shuffledImages.slice(0, level);
-
-    showSequence(sequence, 0);
+	// Ցուցադրում ենք այդ հաջորդականությունը
+	showSequence(sequence, 0);
 }
 
+// Ցուցադրում է հաջորդական նկարները մեկը մյուսի հետևից
 function showSequence(seq, index) {
-    if (index >= seq.length) {
-        setTimeout(() => {
-            imageBox.classList.add("hidden");
-            sequenceDisplay.textContent = "Ընտրիր պատկերները ճիշտ հերթականությամբ։";
-            isSequenceActive = false;
-            renderButtons();
-        }, 500);
-        return;
-    }
+	if (index >= seq.length) {
+		setTimeout(() => {
+			imageBox.classList.add("hidden");
+			sequenceDisplay.textContent = "";
+			isSequenceActive = false;
+			renderButtons();  // Ցուցադրում ենք ընտրության կոճակները
+		}, 500);
+		return;
+	}
 
-    const img = document.createElement("img");
-    img.src = seq[index];
-    img.style.opacity = "0";
-    img.style.transition = "opacity 0.4s ease";
-    sequenceDisplay.innerHTML = "";
-    sequenceDisplay.appendChild(img);
+	// Ստեղծում ենք նոր <img> էլեմենտ՝ հաջորդական նկարը
+	const img = document.createElement("img");
+	img.src = seq[index];
+	img.style.opacity = "0";  // Սկզբում նկարը թաքնված է
+	img.style.transition = "opacity 0.4s ease";  // Սահուն անցում՝ opacity-ի համար
 
-    setTimeout(() => {
-        img.style.opacity = "1";
-    }, 100);
+	sequenceDisplay.innerHTML = "";  // Մաքրում ենք նախորդ կոնտենտը
+	sequenceDisplay.appendChild(img);  // Ավելացնում ենք նոր նկարը
 
-    setTimeout(() => {
-        img.style.opacity = "0";
-        setTimeout(() => {
-            showSequence(seq, index + 1);
-        }, 400);
-    }, 1500);
+	setTimeout(() => {
+		img.style.opacity = "1";
+	}, 100);
+
+	setTimeout(() => {
+		img.style.opacity = "0";
+		setTimeout(() => {
+			showSequence(seq, index + 1);  // Անցնում ենք հաջորդ նկարին
+		}, 400);
+	}, 1500);
 }
 
+// Ստեղնաշարի վրա նկարների կոճակների ցուցադրում
 function renderButtons() {
-    if (!isGameActive || isSequenceActive) return;
+	if (!isGameActive || isSequenceActive) return;
 
-    const options = [...sequence];
+	const options = [...sequence];
 
-    while (options.length < 6) {
-        const rand = images[Math.floor(Math.random() * images.length)];
-        if (!options.includes(rand)) options.push(rand);
-    }
+	// Ավելացնում ենք պատահական ուրիշ նկարներ մինչև ընդհանուր լինեն 6
+	while (options.length < 6) {
+		const rand = images[Math.floor(Math.random() * images.length)];
+		if (!options.includes(rand)) options.push(rand);
+	}
 
-    const shuffled = options.sort(() => 0.5 - Math.random());
+	// Խառնում ենք բոլոր պատկերները պատահականորեն
+	const shuffled = options.sort(() => 0.5 - Math.random());
 
-    shuffled.forEach((imgUrl) => {
-        const btn = document.createElement("button");
-        btn.className = "image-button";
-        btn.style.backgroundImage = `url('${imgUrl}')`;
-        btn.disabled = false;
+	shuffled.forEach((imgUrl) => {
+		const btn = document.createElement("button");
+		btn.className = "image-button";  // Նշում ենք կոճակը որպես պատկերներով կոճակ
+		btn.style.backgroundImage = `url('${imgUrl}')`;
+		btn.disabled = false;  // Կոճակը ակտիվ չէ
 
-        btn.onclick = () => {
-            if (!isGameActive || btn.disabled) return;
+		btn.onclick = ( ) => {
+			if (!isGameActive || btn.disabled) return;
 
-            if (btn.classList.contains("selected")) {
-                btn.classList.remove("selected");
-                const index = userInput.indexOf(imgUrl);
-                if (index > -1) userInput.splice(index, 1);
-            } else {
-                btn.classList.add("selected");
-                userInput.push(imgUrl);
-            }
+			if (btn.classList.contains("selected")) {
+				// Եթե արդեն ընտրված էր՝ հանում ենք
+				btn.classList.remove("selected");
+				const index = userInput.indexOf(imgUrl);
+				if (index > -1) userInput.splice(index, 1); 
+			} else {
+				btn.classList.add("selected");
+				userInput.push(imgUrl);
+			}
 
-            if (userInput.length === sequence.length) {
-                checkResult();
-            }
-        };
+			// Եթե օգտատերը ընտրել է այնքան, որքան պետք է՝ ստուգում ենք պատասխանը
+			if (userInput.length === sequence.length) {
+				checkResult();
+			}
+		};
 
-        buttonPanel.appendChild(btn);
-    });
+		buttonPanel.appendChild(btn);  // Ավելացնում ենք կոճակը շարքին
+	});
 }
 
+// Ստուգում է՝ օգտատերը ճիշտ է հիշել հաջորդականությունը, թե ոչ
 function checkResult() {
-    if (!isGameActive) return;
+	if (!isGameActive) return;
 
-    const correct = sequence.every((val, index) => val === userInput[index]);
+	const correct = sequence.every((val, index) => val === userInput[index]);  // Ստուգում ենք յուրաքանչյուր ընտրությունը՝ համընկնում է արդյոք հաջորդականությանը
 
-    if (correct) {
-        resultDisplay.textContent = "✔️ Ճիշտ է։ Հաջորդ փուլ։";
-        level++;
-        if (level > maxLevel) {
-            resultDisplay.textContent = "🏆 Շնորհավորում ենք, ավարտեցիր խաղը։";
-            setTimeout(() => {
-                resetGame();
-            }, 2000);
-        } else {
-            setTimeout(startLevel, 2000);
-        }
-    } else {
-        resultDisplay.textContent = "❌ Սխալ։ Խաղը սկսվում է սկզբից։";
-        level = 1;
-        setTimeout(() => {
-            resetGame();
-        }, 2000);
-    }
+	if (correct) {
+		resultDisplay.textContent = "✔️ Ճիշտ է։ Հաջորդ փուլ։";
+		level++;
+		if (level > maxLevel) {
+			resultDisplay.textContent = "🏆 Շնորհավորում ենք, ավարտեցիր";
+			setTimeout(() => {
+				resetGame();  // Խաղը վերականգնվում է սկզբնական վիճակին
+			}, 2000);
+		} else {
+			startGame(); // ԱՆցնում է հաջորդ մակարդակին
+		}
+	} else {
+		resultDisplay.textContent = "❌ Սխալ։ Խաղը սկսվում է սկզբից։";
+		level = 1;
+		setTimeout(() => {
+			resetGame();
+		}, 2000);
+	}
 }
 
+// Վերականգնում է խաղը սկզբնական վիճակին
 function resetGame() {
-    if (!isGameActive) return;
+	if (!isGameActive) return;
 
-    isGameActive = false;
-    level = 1;
-    sequence = [];
-    userInput = [];
+	isGameActive = false;
+	level = 1;
+	sequence = [];
+	userInput = [];
 
-    sequenceDisplay.innerHTML = "";
-    buttonPanel.innerHTML = "";
-    levelDisplay.textContent = "1";
-    resultDisplay.textContent = "";
-    startButton.style.display = "inline-block";
-    startButton.disabled = false;
+	sequenceDisplay.innerHTML = "";
+	buttonPanel.innerHTML = "";
+	levelDisplay.textContent = "1";
+	resultDisplay.textContent = "";
+	startButton.style.display = "inline-block";
+	startButton.disabled = false;
 
-    setTimeout(() => {
-        isGameActive = true;
-    }, 2000);
+	// 2 վայրկյան հետո նորից հնարավոր է սկսել խաղը
+	setTimeout(() => {
+		isGameActive = true;
+	}, 2000);
 }
