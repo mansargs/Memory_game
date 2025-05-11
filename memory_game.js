@@ -138,16 +138,26 @@ function checkResult() {
 	if (correct) {
 		resultDisplay.textContent = "✔️ Ճիշտ է։ Հաջորդ փուլ։";
 		level++;
-		if (level > maxLevel) {
-			resultDisplay.textContent = "🏆 Շնորհավորում ենք, ավարտեցիր";
-			setTimeout(() => {
-				resetGame();
-			}, 2000);
-		} else {
-			setTimeout(() => {
-				startGame();
-			}, 2000); // Հետաձգում ենք հաջորդ մակարդակը
+		if (correct) {
+			resultDisplay.textContent = "✔️ Ճիշտ է։ Հաջորդ փուլ։";
+			level++;
+			if (level > maxLevel) {
+				resultDisplay.textContent = "🏆 Շնորհավորում ենք, ավարտեցիր";
+				setTimeout(() => {
+					resetGame();
+				}, 2000);
+			} else {
+				setTimeout(() => {
+					startGame();
+				}, 2000); // Հետաձգում ենք հաջորդ մակարդակը
+			}
 		}
+	} else {
+		resultDisplay.textContent = "❌ Սխալ։ Խաղը սկսվում է սկզբից։";
+		level = 1;
+		setTimeout(() => {
+			resetGame();
+		}, 2000);
 	}
 }
 
