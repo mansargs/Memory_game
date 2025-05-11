@@ -113,7 +113,7 @@ function renderButtons() {
 				// Եթե արդեն ընտրված էր՝ հանում ենք
 				btn.classList.remove("selected");
 				const index = userInput.indexOf(imgUrl);
-				if (index > -1) userInput.splice(index, 1); 
+				if (index > -1) userInput.splice(index, 1);
 			} else {
 				btn.classList.add("selected");
 				userInput.push(imgUrl);
@@ -141,17 +141,13 @@ function checkResult() {
 		if (level > maxLevel) {
 			resultDisplay.textContent = "🏆 Շնորհավորում ենք, ավարտեցիր";
 			setTimeout(() => {
-				resetGame();  // Խաղը վերականգնվում է սկզբնական վիճակին
+				resetGame();
 			}, 2000);
 		} else {
-			startGame(); // ԱՆցնում է հաջորդ մակարդակին
+			setTimeout(() => {
+				startGame();
+			}, 2000); // Հետաձգում ենք հաջորդ մակարդակը
 		}
-	} else {
-		resultDisplay.textContent = "❌ Սխալ։ Խաղը սկսվում է սկզբից։";
-		level = 1;
-		setTimeout(() => {
-			resetGame();
-		}, 2000);
 	}
 }
 
