@@ -137,7 +137,6 @@ function checkResult() {
 
 	if (correct) {
 		resultDisplay.textContent = "✔️ Ճիշտ է։ Հաջորդ փուլ։";
-		level++;
 		if (correct) {
 			resultDisplay.textContent = "✔️ Ճիշտ է։ Հաջորդ փուլ։";
 			level++;
